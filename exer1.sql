@@ -4,7 +4,6 @@ CREATE TABLE estoque (
     quantidade INT NOT NULL DEFAULT 0
 );
 
--- Função de validação de estoque
 CREATE OR REPLACE FUNCTION fn_valida_estoque_minimo()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -16,8 +15,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Trigger vinculada
+
 CREATE TRIGGER trg_valida_estoque
 BEFORE INSERT OR UPDATE ON estoque
 FOR EACH ROW
 EXECUTE FUNCTION fn_valida_estoque_minimo();
+
+INSERT INTO estoque (nome_item, quantidade)
+VALUES ('Teclado Mecânico', 10);
+
+UPDATE estoque
+SET quantidade = -2
+WHERE id = 1;
+
+SELECT * FROM estoque;
